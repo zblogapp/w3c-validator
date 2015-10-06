@@ -16,38 +16,37 @@ $url = '';
 $reportPath = null;
 
 foreach ($arguments as $argument) {
-    if (strpos($argument, '--report-checkstyle=') === 0) {
-        $reportPath = substr($argument, 20);
-    } elseif(strpos($argument, '-') !== 0) {
-        $url = $argument;
-    }
+	if (strpos($argument, '--report-checkstyle=') === 0) {
+		$reportPath = substr($argument, 20);
+	} elseif (strpos($argument, '-') !== 0) {
+		$url = $argument;
+	}
 }
 
 if (!$url) {
-    echo 'ERROR: No URL specified';
-    exit(1);
+	echo 'ERROR: No URL specified';
+	exit(1);
 }
-
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $validator = new \W3C\HtmlValidator();
-$result = $validator->validateInput(file_get_contents($url));
+$result = $validator->validateHTML5(file_get_contents($url));
 
 if ($reportPath) {
-    $formatter = new \W3C\Formatter\Checkstyle();
-    $xml = $formatter->format($result, $url);
-    file_put_contents($reportPath, $xml);
+	$formatter = new \W3C\Formatter\Checkstyle();
+	$xml = $formatter->format($result, $url);
+	file_put_contents($reportPath, $xml);
 }
 
 if ($result->isValid()) {
-    echo 'Validation successful';
-    exit(0);
+	echo 'Validation successful';
+	exit(0);
 } else {
-    printf(
-        'Validation failed: %d error(s) and %d warning(s)',
-        $result->getErrorCount(),
-        $result->getWarningCount()
-    );
-    exit(1);
+	printf(
+		'Validation failed: %d error(s) and %d warning(s)',
+		$result->getErrorCount(),
+		$result->getWarningCount()
+	);
+	exit(1);
 }
