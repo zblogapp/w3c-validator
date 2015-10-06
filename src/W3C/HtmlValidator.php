@@ -36,7 +36,7 @@ class HtmlValidator {
 	 * @param array $data The data to post to the API.
 	 * @return Result
 	 */
-	protected function validate(array $data) {
+	public function validate(array $data) {
 		$data['output'] = 'soap12';
 
 		$resource = curl_init($this->url);
